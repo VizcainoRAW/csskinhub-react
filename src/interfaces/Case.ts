@@ -1,8 +1,9 @@
-import { Skin } from "./skin";
+import { Skin } from "./Skin";
 
 export interface Case{
-    name: String;
-    description: String;
-    image: URL;
+    id: number;
+    name: string;
+    description: string;
+    image: string;
     skins: Skin[];
 }

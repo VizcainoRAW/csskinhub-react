@@ -1,6 +1,7 @@
 export interface Weapon{
-    name: String;
-    category: String;
-    description: String;
-    image: URL;
+    id: number
+    name: string;
+    category: string;
+    description: string;
+    image: string;
 }

@@ -1,9 +1,9 @@
 import { Weapon } from "./Weapon";
 
 export interface Skin{
-    name: String;
+    name: string;
     weapon: Weapon;
-    pattern: String;
-    image: URL;
+    pattern: string;
+    image: string;
     rarity: string;
 }
