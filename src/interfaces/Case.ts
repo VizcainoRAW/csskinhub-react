@@ -1,4 +1,4 @@
-import { Skin } from "./Skin";
+import { Skin } from "./skin";
 
 export interface Case{
     id: number;

@@ -1,51 +1,51 @@
-import { useState, useEffect } from 'react';
 import reactLogo from './assets/react.svg';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
-import { Case } from './interfaces/Case';
-import { fetchCaseById } from './api/caseService';
-
-import SkinList from './components/SkinList';
+import { CasePage } from './pages/CasePage';
+import { useEffect, useState } from 'react';
+import { fetchall } from './api/apiService';
+import CategoryComboBox from './components/CategoryComboBox';
+import CaseComboBox from './components/CaseComboBox';
+import { Category } from './interfaces/category';
+import { Case } from './interfaces/case';
 
 function App() {
-  const [selectedCase, setSelectedCase] = useState<Case | null>(null);
+  const [data, setData] = useState<{ categories: Category[], cases: Case[] }>({ categories: [], cases: [] });
 
   useEffect(() => {
-    const caseId = 21;
-
-    fetchCaseById(caseId)
-      .then((caseData) => {
-        if (caseData) {
-          setSelectedCase(caseData);
+    const fetchData = async () => {
+      try {
+        const result = await fetchall();
+        if (result !== null) {
+          setData(result);
         } else {
-          console.log('Case not found.');
+          console.error('Failed to fetch data');
         }
-      })
-      .catch((error: Error) => {  // Especifica el tipo de error explícitamente como Error
-        console.error('Error:', error);
-      });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   return (
     <>
+      <BrowserRouter>
       <header>
-        <div className="nav-wrapper">
+        <div>
           <img src={reactLogo} alt="React Logo" />
           <span>CS SkinHub</span>
-          <nav>
-          </nav>
         </div>
+        <nav className="nav-wrapper">
+          <CategoryComboBox categories={data.categories}/>
+          <CaseComboBox cases={data.cases}/>
+        </nav>
       </header>
-      <main>
-        {selectedCase ? (
-          <>
-            <h2>{selectedCase.name}</h2>
-            <p>{selectedCase.description}</p>
-            <SkinList skins={selectedCase.skins} />
-          </>
-        ) : (
-          <p>No case selected</p>
-        )}
-      </main>
+      <Routes>
+          <Route path="/" element={<Navigate to="/case/21" replace />} />
+          <Route path="/case/:caseId" element={<CasePage />} />
+      </Routes>
+      </BrowserRouter>
     </>
   );
 }
